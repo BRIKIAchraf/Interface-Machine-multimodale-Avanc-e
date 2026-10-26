@@ -1,249 +1,78 @@
-# Interface Homme-Machine Multimodale Avancée
+# Multimodal Human-Machine Interface
 
-## 🎯 Objectif
-Système intelligent de contrôle multimodal combinant **gestes**, **voix** et **émotions** pour une interaction homme-machine naturelle et intuitive.
+Computer-vision and speech prototype combining gestures, voice commands and facial-expression signals to create a natural human-machine interaction loop.
 
-## ✨ Fonctionnalités Implémentées
+## Product concept
 
-### 1. 🖐️ Détection de Gestes
-- **Technologie**: Segmentation par couleur de peau + Analyse de contours (OpenCV)
-- **Gestes détectés**:
-  - ✊ Poing Fermé
-  - ✋ Main Ouverte  
-  - ☝️ Index Pointé
-  - ✌️ V de Victoire / Peace
-  - 3️⃣ Trois Doigts
-  - 4️⃣ Quatre Doigts
+The interface observes multiple input channels, normalizes them and applies explicit fusion rules to select an action.
 
-- **Fonctionnalités avancées**:
-  - Comptage automatique des doigts levés
-  - Détection d'enveloppe convexe
-  - Analyse des défauts de convexité
-  - Affichage en temps réel sur le flux vidéo
+~~~text
+Webcam → gesture detector ─┐
+Microphone → speech recognizer ─┼→ fusion engine → UI/system action
+Face image → expression detector ─┘
+~~~
 
-### 2. 🎤 Reconnaissance Vocale
-- **Technologie**: Google Speech Recognition (gratuit, sans API key)
-- **Langue**: Français (fr-FR)
-- **Fonctionnalités**:
-  - Écoute continue en arrière-plan
-  - Ajustement automatique au bruit ambiant
-  - Transcription en temps réel
-  - Support multi-threading pour ne pas bloquer l'interface
+## Implemented capabilities
 
-### 3. 😊 Détection d'Émotions
-- **Technologie**: OpenCV Haar Cascades
-- **Émotions détectées**:
-  - 😊 Happy (Joie) - Détection de sourire
-  - 😐 Neutral (Neutre)
-  - 😢 Sad (Tristesse) - Analyse de l'intensité faciale
-  - 😠 Angry (Colère) - Détection de sourcils froncés
+### Gesture recognition
 
-- **Fonctionnalités**:
-  - Détection de visage en temps réel
-  - Analyse des yeux et de la bouche
-  - Affichage des rectangles de détection
+- skin-colour segmentation and contour analysis with OpenCV;
+- convex-hull and convexity-defect analysis;
+- detection of closed fist, open hand, pointing finger, victory sign and finger counts;
+- real-time overlay on the video stream.
 
-### 4. 🔗 Fusion Multimodale Intelligente
-Le moteur de fusion combine les trois modalités pour prendre des décisions contextuelles.
+### Speech recognition
 
-#### Règles Implémentées:
+- French speech commands with SpeechRecognition;
+- continuous listening in a background thread;
+- ambient-noise adjustment and live transcription;
+- commands for navigation, volume and display mode.
 
-**Fusion Voix + Geste:**
-- Index pointé + "ouvre" / "sélectionne" → 🎯 SÉLECTION ACTIVÉE
+### Facial-expression signals
 
-**Commandes Vocales:**
-- "mode sombre" / "dark mode" → 🌙 MODE SOMBRE
-- "mode clair" / "light mode" → ☀️ MODE CLAIR
-- "ferme" / "quitte" → ❌ FERMETURE
-- "aide" / "help" → ❓ AIDE
-- "volume monte" → 🔊 VOLUME +
-- "volume baisse" → 🔉 VOLUME -
-- "suivant" / "next" → ⏭️ SUIVANT
-- "précédent" / "previous" → ⏮️ PRÉCÉDENT
+- face detection with Haar cascades;
+- smile-based happy signal;
+- neutral, sad and angry heuristic signals;
+- visual feedback in the interface.
 
-**Gestes Seuls:**
-- Poing Fermé → ⏸️ PAUSE / STOP
-- Main Ouverte → ✋ PRÊT
-- V de Victoire → ✌️ CONFIRMATION
+### Multimodal fusion
 
-**Fusion Émotion + Geste:**
-- Colère + Poing Fermé → ⚠️ ALERTE UTILISATEUR MÉCONTENT
-- Joie + Main Ouverte → 😊 UTILISATEUR SATISFAIT
+Examples of explicit rules:
 
-## 🛠️ Installation
+- pointing finger + “ouvre” or “sélectionne” → selection;
+- “mode sombre” / “mode clair” → display mode;
+- closed fist → pause/stop;
+- victory sign → confirmation;
+- angry signal + closed fist → user-alert signal.
 
-### Prérequis
-- Python 3.12+
-- Webcam fonctionnelle
-- Microphone (pour la reconnaissance vocale)
+## Technology stack
 
-### Installation des dépendances
-```bash
+Python · OpenCV · NumPy · PyQt6 · SpeechRecognition · PyAudio · Haar Cascades · multithreading
+
+## Quick start
+
+~~~bash
 pip install -r requirements.txt
-```
-
-### Dépendances principales
-- `opencv-python` - Traitement d'image et vidéo
-- `PyQt6` - Interface graphique
-- `SpeechRecognition` - Reconnaissance vocale
-- `pyaudio` - Capture audio
-- `numpy` - Calculs numériques
-
-## 🚀 Lancement
-
-```bash
 python main.py
-```
+~~~
 
-## 📖 Utilisation
+A webcam and microphone are required. Good lighting and a clear background improve gesture and expression detection.
 
-### Interface Utilisateur
-L'interface affiche:
-1. **Flux vidéo** avec superpositions en temps réel
-2. **Dashboard** avec 4 panneaux:
-   - 🖐️ Geste Détecté
-   - 😊 Émotion
-   - 🎤 Dernière Commande Vocale
-   - ⚡ Action Système (résultat de la fusion)
+## Project structure
 
-### Conseils d'utilisation
+~~~text
+src/gestures/    Hand tracking and gesture analysis
+src/voice/       Speech recognition
+src/emotions/    Facial-expression signals
+src/fusion/      Multimodal decision rules
+src/ui/          Main window and feedback
+src/utils/       Video and voice worker threads
+~~~
 
-**Pour les gestes:**
-- Placez votre main bien éclairée devant la caméra
-- Évitez les arrière-plans de couleur chair
-- Gardez une distance de 30-60 cm de la caméra
+## Limitations
 
-**Pour la voix:**
-- Parlez clairement et distinctement
-- Attendez le signal "Écoute en cours" dans la console
-- Utilisez les commandes en français
+The current approach is a prototype based on heuristics. Skin-colour segmentation, Haar cascades and speech recognition can be sensitive to lighting, camera angle, accents, noise and bias. Production use would require stronger models, confidence scores, calibration, privacy controls and user-consent flows.
 
-**Pour les émotions:**
-- Regardez la caméra de face
-- Assurez un bon éclairage du visage
-- Les expressions marquées sont mieux détectées
+## Author
 
-## 🏗️ Architecture du Projet
-
-```
-Interface Homme-Machine Multimodale Avancée/
-│
-├── main.py                          # Point d'entrée
-├── requirements.txt                 # Dépendances
-├── README.md                        # Ce fichier
-│
-└── src/
-    ├── gestures/                    # Module de gestes
-    │   ├── hand_tracking.py         # Détection de mains
-    │   └── analyzer.py              # Analyse de gestes
-    │
-    ├── voice/                       # Module vocal
-    │   └── recognizer.py            # Reconnaissance vocale
-    │
-    ├── emotions/                    # Module émotions
-    │   └── detector.py              # Détection d'émotions
-    │
-    ├── fusion/                      # Moteur de fusion
-    │   └── engine.py                # Règles multimodales
-    │
-    ├── ui/                          # Interface utilisateur
-    │   └── main_window.py           # Fenêtre principale
-    │
-    └── utils/                       # Utilitaires
-        ├── video_thread.py          # Thread vidéo
-        └── voice_thread.py          # Thread vocal
-```
-
-## 🔧 Configuration Avancée
-
-### Ajuster la sensibilité de détection de peau
-Dans `src/gestures/hand_tracking.py`:
-```python
-self.lower_skin = np.array([0, 20, 70], dtype=np.uint8)
-self.upper_skin = np.array([20, 255, 255], dtype=np.uint8)
-```
-
-### Modifier la langue de reconnaissance vocale
-Dans `src/voice/recognizer.py`:
-```python
-text = self.recognizer.recognize_google(audio, language='fr-FR')
-# Changez 'fr-FR' en 'en-US' pour l'anglais
-```
-
-### Ajouter de nouvelles règles de fusion
-Dans `src/fusion/engine.py`, méthode `evaluate_rules()`:
-```python
-elif "votre_commande" in voice:
-    action = "VOTRE_ACTION"
-```
-
-## 🎨 Personnalisation de l'Interface
-
-L'interface utilise PyQt6 avec un thème sombre moderne. Pour personnaliser:
-- Modifiez les styles CSS dans `src/ui/main_window.py`
-- Ajustez les couleurs dans `setStyleSheet()`
-
-## 🐛 Dépannage
-
-### La webcam ne s'ouvre pas
-- Vérifiez qu'aucune autre application n'utilise la webcam
-- Essayez de changer l'index de la caméra dans `video_thread.py`:
-  ```python
-  cap = cv2.VideoCapture(1)  # Essayez 1 au lieu de 0
-  ```
-
-### Le microphone ne fonctionne pas
-- Vérifiez les permissions du microphone dans Windows
-- Installez `pyaudio` correctement:
-  ```bash
-  pip install pyaudio
-  ```
-
-### Les gestes ne sont pas détectés
-- Améliorez l'éclairage
-- Ajustez les seuils de couleur de peau
-- Vérifiez que votre main est bien visible
-
-### La reconnaissance vocale ne fonctionne pas
-- Vérifiez votre connexion Internet (Google Speech Recognition nécessite une connexion)
-- Testez votre microphone avec un autre logiciel
-- Augmentez le volume du microphone
-
-## 📊 Performances
-
-- **FPS Vidéo**: ~25-30 FPS (dépend de la puissance du PC)
-- **Latence Gestes**: < 50ms
-- **Latence Voix**: 1-2 secondes (dépend de la connexion)
-- **Latence Émotions**: ~300ms (analyse toutes les 10 frames)
-
-## 🚀 Améliorations Futures
-
-- [ ] Support multi-utilisateurs
-- [ ] Reconnaissance de posture corporelle
-- [ ] Détection d'objets pointés
-- [ ] Prédiction d'intentions (LSTM)
-- [ ] Interface AR avec overlays 3D
-- [ ] Support haptique
-- [ ] Apprentissage adaptatif personnalisé
-- [ ] Export en exécutable standalone
-
-## 📝 Licence
-
-Ce projet est développé à des fins éducatives et de recherche.
-
-## 👥 Contribution
-
-Pour contribuer:
-1. Forkez le projet
-2. Créez une branche (`git checkout -b feature/AmazingFeature`)
-3. Committez vos changements (`git commit -m 'Add AmazingFeature'`)
-4. Pushez vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
-
-## 📧 Contact
-
-Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue sur GitHub.
-
----
-
-**Développé avec ❤️ pour l'interaction homme-machine du futur**
+**Achraf BRIKI** · [LinkedIn](https://www.linkedin.com/in/achrafbriki/) · [Portfolio](https://achrafbriki.com)
