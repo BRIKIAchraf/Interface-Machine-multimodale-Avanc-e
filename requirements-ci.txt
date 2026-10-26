@@ -1,0 +1,2 @@
+# Minimal CI dependencies; optional hardware/GUI/ML packages are intentionally excluded from headless CI.
+pytest==8.3.5
