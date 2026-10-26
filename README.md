@@ -1,3 +1,8 @@
+
+
+## About
+
+Multimodal AI interaction prototype combining computer vision, speech recognition, facial-expression signals and explicit fusion rules for natural human-machine control.
 # Multimodal Human-Machine Interface
 
 Computer-vision and speech prototype combining gestures, voice commands and facial-expression signals to create a natural human-machine interaction loop.
