@@ -81,3 +81,13 @@ The current approach is a prototype based on heuristics. Skin-colour segmentatio
 ## Author
 
 **Achraf BRIKI** · [LinkedIn](https://www.linkedin.com/in/achrafbriki/) · [Portfolio](https://achrafbriki.com)
+
+## Delivery profile
+
+**Status:** Prototype  
+**Demo:** Local webcam and microphone application; no public hosted demo yet.  
+**Prerequisites:** Python 3.12+, webcam, microphone and PyAudio system dependencies.  
+**Validation:** Lighting, noise, accents, conflicting modalities and safe fallback behaviour.  
+**Performance plan:** Measure FPS, speech-to-action latency, CPU use and command accuracy.  
+**Roadmap:** Test fixtures, confidence scores, privacy controls, stronger models and CI.  
+**Responsible AI:** Expression signals are heuristics, not reliable emotion or intent measurements.
